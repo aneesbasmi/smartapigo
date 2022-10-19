@@ -7,7 +7,7 @@ SmartAPI is a set of REST-like APIs that expose many capabilities required to bu
 
 ## Installation
 ```
-go get github.com/angel-one/smartapigo
+go get github.com/aneesbasmi/smartapigo
 ```
 ## API usage
 ```golang
@@ -15,7 +15,7 @@ package main
 
 import (
 	"fmt"
-	SmartApi "github.com/angel-one/smartapigo"
+	SmartApi "github.com/aneesbasmi/smartapigo"
 )
 
 func main() {
@@ -71,8 +71,8 @@ package main
 
 import (
 	"fmt"
-	SmartApi "github.com/angel-one/smartapigo"
-	"github.com/angel-one/smartapigo/websocket"
+	SmartApi "github.com/aneesbasmi/smartapigo"
+	"github.com/aneesbasmi/smartapigo/websocket"
 	"time"
 )
 
