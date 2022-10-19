@@ -44,6 +44,46 @@ type Order struct {
 // Orders is a list of orders.
 type Orders []Order
 
+// Order represents a individual order response.
+type OrderItem struct {
+	Variety                 string  `json:"variety"`
+	OrderType               string  `json:"ordertype"`
+	ProductType             string  `json:"producttype"`
+	Duration                string  `json:"duration"`
+	Price                   float64 `json:"price"`
+	TriggerPrice            float64 `json:"triggerprice"`
+	Quantity                string  `json:"quantity"`
+	DisclosedQuantity       string  `json:"disclosedquantity"`
+	SquareOff               float64 `json:"squareoff"`
+	StopLoss                float64 `json:"stoploss"`
+	TrailingStopLoss        float64 `json:"trailingstoploss"`
+	TrailingSymbol          string  `json:"trailingsymbol"`
+	TransactionType         string  `json:"transactiontype"`
+	Exchange                string  `json:"exchange"`
+	SymbolToken             string  `json:"symboltoken"`
+	InstrumentType          string  `json:"instrumenttype"`
+	StrikePrice             float64 `json:"strikeprice"`
+	OptionType              string  `json:"optiontype"`
+	ExpiryDate              string  `json:"expirydate"`
+	LotSize                 string  `json:"lotsize"`
+	CancelSize              string  `json:"cancelsize"`
+	AveragePrice            float64 `json:"averageprice"`
+	FilledShares            string  `json:"filledshares"`
+	UnfilledShares          string  `json:"unfilledshares"`
+	OrderID                 string  `json:"orderid"`
+	Text                    string  `json:"text"`
+	Status                  string  `json:"status"`
+	OrderStatus             string  `json:"orderstatus"`
+	UpdateTime              string  `json:"updatetime"`
+	ExchangeTime            string  `json:"exchtime"`
+	ExchangeOrderUpdateTime string  `json:"exchorderupdatetime"`
+	FillID                  string  `json:"fillid"`
+	FillTime                string  `json:"filltime"`
+}
+
+// Orders is a list of orders.
+type OrderItems []OrderItem
+
 // OrderParams represents parameters for placing an order.
 type OrderParams struct {
 	Variety         string `json:"variety"`
@@ -105,6 +145,31 @@ type Trade struct {
 // Trades is a list of trades.
 type Trades []Trade
 
+// Trade represents an individual trade response.
+type TradeItem struct {
+	Exchange        string  `json:"exchange"`
+	ProductType     string  `json:"producttype"`
+	TradingSymbol   string  `json:"tradingsymbol"`
+	InstrumentType  string  `json:"instrumenttype"`
+	SymbolGroup     string  `json:"symbolgroup"`
+	StrikePrice     float64 `json:"strikeprice"`
+	OptionType      string  `json:"optiontype"`
+	ExpiryDate      string  `json:"expirydate"`
+	MarketLot       string  `json:"marketlot"`
+	Precision       string  `json:"precision"`
+	Multiplier      string  `json:"multiplier"`
+	TradeValue      float64 `json:"tradevalue"`
+	TransactionType string  `json:"transactiontype"`
+	FillPrice       float64 `json:"fillprice"`
+	FillSize        string  `json:"fillsize"`
+	OrderID         string  `json:"orderid"`
+	FillID          string  `json:"fillid"`
+	FillTime        string  `json:"filltime"`
+}
+
+// Trades is a list of trades.
+type TradeItems []TradeItem
+
 // Position represents an individual position response.
 type Position struct {
 	Exchange              string `json:"exchange"`
@@ -162,8 +227,8 @@ type ConvertPositionParams struct {
 }
 
 // GetOrderBook gets user orders.
-func (c *Client) GetOrderBook() (Orders, error) {
-	var orders Orders
+func (c *Client) GetOrderBook() (OrderItems, error) {
+	var orders OrderItems
 	err := c.doEnvelope(http.MethodGet, URIGetOrderBook, nil, nil, &orders, true)
 	return orders, err
 }
@@ -219,10 +284,10 @@ func (c *Client) GetPositions() (Positions, error) {
 }
 
 // GetTradeBook gets user trades.
-func (c *Client) GetTradeBook() (Trades, error) {
-	var trades Trades
-	err := c.doEnvelope(http.MethodGet, URIGetTradeBook, nil, nil, &trades, true)
-	return trades, err
+func (c *Client) GetTradeBook() (TradeItems, error) {
+	var tradeItems TradeItems
+	err := c.doEnvelope(http.MethodGet, URIGetTradeBook, nil, nil, &tradeItems, true)
+	return tradeItems, err
 }
 
 // ConvertPosition converts position's product type.
