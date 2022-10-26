@@ -163,11 +163,11 @@ func getLocalIP() (string, error) {
 func getPublicIp() (string, error) {
 	resp, err := http.Get("https://myexternalip.com/raw")
 	if err != nil {
-		resp, err = http.Get("https://ipecho.net/plain")
+		resp, err = http.Get("https://ipv4.icanhazip.com")
 		if err != nil {
 			resp, err = http.Get("https://api.ipify.org/?format=raw")
 			if err != nil {
-				resp, err = http.Get("https://ipv4.icanhazip.com")
+				resp, err = http.Get("https://ipecho.net/plain")
 				if err != nil {
 					return "", err
 				}
@@ -180,5 +180,5 @@ func getPublicIp() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(content), nil
+	return strings.TrimSpace(string(content)), nil
 }
