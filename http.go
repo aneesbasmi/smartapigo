@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -33,7 +34,7 @@ type HTTPResponse struct {
 }
 
 type envelope struct {
-	Status    bool      `json:"status"`
+	Status    bool        `json:"status"`
 	ErrorCode string      `json:"errorcode"`
 	Message   string      `json:"message"`
 	Data      interface{} `json:"data"`
@@ -52,7 +53,7 @@ func NewHTTPClient(h *http.Client, hLog *log.Logger, debug bool) HTTPClient {
 			Transport: &http.Transport{
 				MaxIdleConnsPerHost:   10,
 				ResponseHeaderTimeout: time.Second * time.Duration(5),
-				TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+				TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 			},
 		}
 	}
@@ -86,7 +87,7 @@ func (h *httpClient) Do(method, rURL string, params map[string]interface{}, head
 
 	if err != nil {
 		h.hLog.Printf("Request preparation failed: %v", err)
-		return resp,err
+		return resp, err
 	}
 
 	if headers != nil {
@@ -108,7 +109,7 @@ func (h *httpClient) Do(method, rURL string, params map[string]interface{}, head
 	r, err := h.client.Do(req)
 	if err != nil {
 		h.hLog.Printf("Request failed: %v", err)
-		return resp,err
+		return resp, err
 	}
 
 	defer r.Body.Close()
@@ -116,7 +117,7 @@ func (h *httpClient) Do(method, rURL string, params map[string]interface{}, head
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		h.hLog.Printf("Unable to read response: %v", err)
-		return resp,err
+		return resp, err
 	}
 
 	resp.Response = r
@@ -140,7 +141,7 @@ func (h *httpClient) DoEnvelope(method, url string, params map[string]interface{
 		var e envelope
 		if err := json.Unmarshal(resp.Body, &e); err != nil {
 			h.hLog.Printf("Error parsing JSON response: %v", err)
-			return err
+			return NewError("JSONUNMARSHALLRROR", string(resp.Body), fmt.Sprintf("Error parsing JSON response: %v", err))
 		}
 
 		return NewError(e.ErrorCode, e.Message, e.Data)
@@ -152,7 +153,7 @@ func (h *httpClient) DoEnvelope(method, url string, params map[string]interface{
 
 	if err := json.Unmarshal(resp.Body, &envl); err != nil {
 		h.hLog.Printf("Error parsing JSON response: %v | %s", err, resp.Body)
-		return err
+		return NewError("JSONUNMARSHALLRROR", string(resp.Body), fmt.Sprintf("Error parsing JSON response: %v", err))
 	}
 
 	if !envl.Status {
